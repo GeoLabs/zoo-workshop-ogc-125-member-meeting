@@ -1,5 +1,5 @@
 # zoo-workshop-ogc-125-member-meeting
-ZOO-Project workshop to be held during the 125th OGC members meeting in Frascati
+ZOO-Project workshop held during the 125th OGC members meeting in Frascati
 
 ## Setup the ZOO-Project using Docker
 
@@ -13,6 +13,8 @@ docker-compose up -d
 ````
 Access your OGC API - Processes - Part 1: Core [landing page](http://localhost/ogc-api/).
 
+![Image: OpenAPI with default end-points](zoo_ws_ogc_init.png "OpenAPI with default end-points")
+
 ## Secure access to specific end-points
 
 First run a shell from the running container.
@@ -24,7 +26,7 @@ docker exec -it zpgit_zookernel_1 bash
 From this shell, use the commands below to add an access restriction to the HelloPy execution end-point. The `sed` command is used to add the path properly to the list.
 
 ````
-cat >> $WS_DIR/ZPGIT/docker/oas.cfg << EOF
+cat >> /usr/lib/cgi-bin/oas.cfg << EOF
 [processes/HelloPy/execution]
 length=1
 pname=HelloPy
@@ -57,24 +59,34 @@ path=/usr/lib/cgi-bin
 service=securityOut
 EOF
 
-sed "s#/processes/OTB.BandMath/execution,#/processes/OTB.BandMath/execution,/processes/HelloPy/execution,#g" -i $WS_DIR/ZPGIT/docker/oas.cfg
+sed "s#/processes/OTB.BandMath/execution,#/processes/OTB.BandMath/execution,/processes/HelloPy/execution,#g" -i /usr/lib/cgi-bin/oas.cfg
 ````
 
 Here, we use the default value provided in the official documentation. Nevertheless, the filter_out is only to illustrate the fact that somethign can be run be fore returning the result to the client application.
 
+![Image: OpenAPI with a secured end-point](zoo_ws_ogc_hellopy_secured.png "OpenAPI with a secured end-point")
+
 ## Create a password file
 
-As before, run a shell from the running container.
+First, modify a bit the docker-compose.yaml file located in `$WS_DIR/ZPGIT` to add the following valumes to both `zookernel` and `zoofpm`.
 
 ````
-docker exec -it zpgit_zookernel_1 bash
+      - ./docker/security:/etc/zoo-security
 ````
 
-From this shell, run the following command.
+Then, make sure to restart your containers wiht the new settings.
 
 ````
-htpasswd -c -b /tmp/passwords test test
+docker-compose down && docker-compose up -d
 ````
+
+Now, create the password file with the command below.
+
+````
+docker exec zpgit-zookernel-1 htpasswd -c -b /etc/zoo-security/htpasswords test test
+````
+
+Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using the test/test credentials.
 
 ## Using Keycloack to authenticate
 
