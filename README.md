@@ -88,6 +88,21 @@ docker exec zpgit-zookernel-1 htpasswd -c -b /etc/zoo-security/htpasswords test 
 
 Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using the test/test credentials.
 
+To do so, you can use the following execute payload. By selecting "respond-async;return=representation" for the Prefer header parameter, you should be able to run the service asynchronously.
+
+````
+{
+    "inputs": {
+        "a": "Martin et Jules"
+    },
+    "outputs": {
+        "Result": {
+            "transmissionMode": "value"
+        }
+    }
+}
+````
+
 ## Using Keycloack to authenticate
 
 ## Future steps
