@@ -85,6 +85,8 @@ docker exec zpgit-zookernel-1 htpasswd -c -b /etc/zoo-security/htpasswords test 
 
 Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using the test/test credentials.
 
+![Image: OpenAPI with HTTP Basic Auth](zoo_secured_api_basicauth.png "OpenAPI with HTTP Basic Auth")
+
 To do so, you can use the following execute payload. By selecting "respond-async;return=representation" for the Prefer header parameter, you should be able to run the service asynchronously.
 
 ````
@@ -233,6 +235,9 @@ sed "s#serviceType = C#serviceType = Python#g;s#serviceProvider = security_servi
 Note that we decided to not update the name in the `[oosecurity]` section to not require any further updates of other parts of the oas.cfg, such as the `secured` key of the `[processes/HelloPy/execution]` section. In the same way, rather than defining another process name, we decided to keep using `securityIn`.
 
 Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using OpenID Connect.
+
+![Image: OpenAPI with OpenID Connect](zoo_secured_api_basicauth.png "OpenAPI with OpenID Connect")
+
 
 ## Future steps
 
