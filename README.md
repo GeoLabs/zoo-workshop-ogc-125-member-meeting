@@ -20,7 +20,7 @@ Access your OGC API - Processes - Part 1: Core [landing page](http://localhost/o
 First run a shell from the running container.
 
 ````
-docker exec -it zpgit_zookernel_1 bash
+docker exec -it zpgit-zookernel-1 bash
 ````
 
 From this shell, use the commands below to add an access restriction to the HelloPy execution end-point. The `sed` command is used to add the path properly to the list.
@@ -62,7 +62,7 @@ EOF
 sed "s#/processes/OTB.BandMath/execution,#/processes/OTB.BandMath/execution,/processes/HelloPy/execution,#g" -i /usr/lib/cgi-bin/oas.cfg
 ````
 
-Here, we use the default value provided in the official documentation. Nevertheless, the filter_out is only to illustrate the fact that somethign can be run be fore returning the result to the client application.
+Here, we use the default value provided in the official documentation. Nevertheless, the filter_out is only to illustrate the fact that something can be run before returning the result to the client application.
 
 ![Image: OpenAPI with a secured end-point](zoo_ws_ogc_hellopy_secured.png "OpenAPI with a secured end-point")
 
