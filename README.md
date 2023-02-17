@@ -54,15 +54,12 @@ passwd=/tmp/htpasswords
 path=/usr/lib/cgi-bin
 service=securityIn
 
-[filter_out]
-path=/usr/lib/cgi-bin
-service=securityOut
 EOF
 
 sed "s#/processes/OTB.BandMath/execution,#/processes/OTB.BandMath/execution,/processes/HelloPy/execution,#g" -i /usr/lib/cgi-bin/oas.cfg
 ````
 
-Here, we use the default value provided in the official documentation. Nevertheless, the filter_out is only to illustrate the fact that something can be run before returning the result to the client application.
+Here, we use the default values provided in the official documentation except the `[filter_out]` which won't be used here. 
 
 ![Image: OpenAPI with a secured end-point](zoo_ws_ogc_hellopy_secured.png "OpenAPI with a secured end-point")
 
