@@ -236,7 +236,7 @@ Note that we decided to not update the name in the `[oosecurity]` section to not
 
 Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using OpenID Connect.
 
-![Image: OpenAPI with OpenID Connect](zoo_secured_api_basicauth.png "OpenAPI with OpenID Connect")
+![Image: OpenAPI with OpenID Connect](zoo_secured_api_openid_connect.png "OpenAPI with OpenID Connect")
 
 
 ## Future steps
