@@ -17,13 +17,13 @@ Access your OGC API - Processes - Part 1: Core [landing page](http://localhost/o
 
 ## Secure access to specific end-points (using HTTP Basic Authentication)
 
-First run a shell from the running container.
+First, run a shell from the running container.
 
 ````
 docker exec -it zpgit-zookernel-1 bash
 ````
 
-From this shell, use the commands below to add an access restriction to the HelloPy execution end-point. The `sed` command is used to add the path properly to the list.
+From this shell, use the commands below to add an access restriction to the HelloPy execution end-point. The `sed` command adds the path correctly to the list.
 
 ````
 cat >> /usr/lib/cgi-bin/oas.cfg << EOF
@@ -65,13 +65,13 @@ Here, we use the default values provided in the official documentation except th
 
 ## Create a password file
 
-First, modify a bit the docker-compose.yaml file located in `$WS_DIR/ZPGIT` to add the following valumes to both `zookernel` and `zoofpm`.
+First, modify the docker-compose.yaml file (located in `$WS_DIR/ZPGIT`) a bit to add the following volumes to both `zookernel` and `zoofpm`.
 
 ````
       - ./docker/security:/etc/zoo-security
 ````
 
-Then, make sure to restart your containers wiht the new settings.
+Then, make sure to restart your containers with the new settings.
 
 ````
 docker-compose down && docker-compose up -d
@@ -83,11 +83,11 @@ Now, create the password file with the command below.
 docker exec zpgit-zookernel-1 htpasswd -c -b /etc/zoo-security/htpasswords test test
 ````
 
-Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using the test/test credentials.
+Now, go back to the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using the test/test credentials.
 
 ![Image: OpenAPI with HTTP Basic Auth](zoo_secured_api_basicauth.png "OpenAPI with HTTP Basic Auth")
 
-To do so, you can use the following execute payload. By selecting "respond-async;return=representation" for the Prefer header parameter, you should be able to run the service asynchronously.
+To do so, you can use the following execute request body. 
 
 ````
 {
@@ -102,7 +102,9 @@ To do so, you can use the following execute payload. By selecting "respond-async
 }
 ````
 
-To make this example request available from swagger-ui, please execute the command below.
+By selecting "respond-async;return=representation" for the Prefer header parameter, you should be able to run the service asynchronously.
+
+Please execute the command below to make this example request available from swagger-ui.
 
 ````
 sed "s#[processes/HelloPy/execution]#[processes/HelloPy/execution]\nexamples=sample.json\nexamples_summary=Simple echo request#g" -i /usr/lib/cgi-bin/oas.fg
@@ -132,7 +134,7 @@ docker cp test.json zpgit-zookernel-1:/var/www/html/examples/HelloPy/sample.json
 
 ## Using [OpenID Connect 1.0](https://openid.net/connect/) to authenticate
 
-First, you will update the docker-compose.yaml file at the `ZPGIT` directory and add the following content.
+First, you will update the docker-compose.yaml file in the `ZPGIT` directory and add the following content.
 
 ````
   keycloack:
@@ -147,25 +149,25 @@ First, you will update the docker-compose.yaml file at the `ZPGIT` directory and
       - "8099:8080"
 ````
 
-This will add a keycloack, using the default dev setting (start-dev, not production ready), to your environment.
+This addition will add a keycloack to your environment, using the default dev setting (start-dev, not production ready).
 
-Once, you have modified the docker-compose.yaml, run the command below.
+Once, you have modified the docker-compose.yaml file, run the command below.
 
 ````
 docker-compose down && docker-compose up -d
 ````
 
-The keycloack server may takes some time to start, after it properly started, you should be able to access the [keycloack's admin interface](http://localhost:8099/admin/). Please, log in with `admin`/`admin` credential as defined in the `docker-compose.yaml` file.
+The keycloack server may take some time to start. After it correctly started, you should be able to access the [keycloack's admin interface](http://localhost:8099/admin/). Please, log in with `admin`/`admin` credential as defined in the `docker-compose.yaml` file.
 
-Using the top left select list, displaying per default the "master" realm, you can create a realm. Use `ZOO_WS_SECURED_AREA` for the realm name, click on create.
+Using the top left select list, displaying per default "master", you can create a realm. Use `ZOO_WS_SECURED_AREA` for the realm name, and click on create.
 
 ![Image: OpenID Connect realm](keycloack_new_real.png "OpenID Connect realm")
 
-Once the realm creation is done, you will add a client with the following Client ID: `ZOO-Secured-Client`. 
+Once the realm creation is over, you will add a client with the following Client ID: `ZOO-Secured-Client`. 
 
 ![Image: OpenID Connect client 1](keycloack_new_client_1.png "OpenID Connect client 1")
 
-On the second configuration page, activate the Implicit flow then, click on save.
+On the second configuration page, activate the Implicit flow, then click on save.
 
 ![Image: OpenID Connect client 2](keycloack_new_client_2.png "OpenID Connect client 2")
 
@@ -176,8 +178,8 @@ In the settings pannel, set the following values (press save to save the setting
 
 ![Image: OpenID Connect settings](keycloack_client_urls.png "OpenID Connect settings")
 
-To conclude the setup, you should decide if you want to use external identify providers (such as GitHub), or create a user within keycloack, or both.
-In case you decide to create a user from keycloack, don't forget to set a password using the dedicated tab from the User creation form.
+To conclude the setup, you should decide if you want to use external identity providers (such as GitHub), create a user within keycloack, or both.
+If you decide to create a user from keycloack, remember to set a password using the dedicated tab from the User creation form.
 
 You can now edit the `osecurity` section from the `oas.cfg` file to activate the OpenIdConnect option.
 
@@ -188,7 +190,7 @@ type=openIdConnect
 openIdConnectUrl=http://localhost:8099/realms/ZOO_WS_SECURED_AREA/.well-known/openid-configuration
 ````
 
-You will create a `security_service.py` in the `/usr/lib/cgi-bin` directory (of the zookernel container) containing the following Python code snipet.
+You will create a `security_service.py` in the `/usr/lib/cgi-bin` directory (of the zookernel container) containing the following Python code snippet
 
 ````
 import zoo
@@ -232,12 +234,21 @@ You can run the command below from the zookernel container to get this done.
 sed "s#serviceType = C#serviceType = Python#g;s#serviceProvider = security_service.zo#serviceProvider = security_service#g" -i /usr/lib/cgi-bin/securityIn.zcfg 
 ````
 
-Note that we decided to not update the name in the `[oosecurity]` section to not require any further updates of other parts of the oas.cfg, such as the `secured` key of the `[processes/HelloPy/execution]` section. In the same way, rather than defining another process name, we decided to keep using `securityIn`.
+Note that we decided not to update the name in the `[oosecurity]` section not to require any further updates of other parts of the oas.cfg, such as the `secured` key of the `[processes/HelloPy/execution]` section. In the same way, rather than defining another process name, we kept using `securityIn`.
 
-Now, go back on the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using OpenID Connect.
+Now, go back to the [link with rel service-doc](http://localhost/ogc-api/api.html). You should now be able to run the HelloPy service after authenticating using OpenID Connect.
 
 ![Image: OpenAPI with OpenID Connect](zoo_secured_api_openid_connect.png "OpenAPI with OpenID Connect")
 
+Enter the client id you defined before (`ZOO-Secured-Client`), then press the authenticate button. Your browser should load another page to let you authenticate. Once logged in, you should then come back to the initial page.
+
 
 ## Future steps
+
+Add support for JobID related to execution over secured end-points.
+
+Example: 
+
+ - Paul execute asecured HelloPy asynchronously
+ - Paul list the jobs only started by Paul
 
