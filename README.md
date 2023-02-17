@@ -100,6 +100,34 @@ To do so, you can use the following execute payload. By selecting "respond-async
 }
 ````
 
+To make this example request available from swagger-ui, please execute the command below.
+
+````
+sed "s#[processes/HelloPy/execution]#[processes/HelloPy/execution]\nexamples=sample.json\nexamples_summary=Simple echo request#g" -i /usr/lib/cgi-bin/oas.fg
+````
+
+Then, create and copy the file in the proper location.
+
+````
+# Create the file
+cat > test.json << EOF
+{
+    "inputs": {
+        "a": "Martin et Jules"
+    },
+    "outputs": {
+        "Result": {
+            "transmissionMode": "value"
+        }
+    }
+}
+EOF
+# Create the target directory
+docker exec zpgit-zookernel-1 mkdir /var/www/html/examples/HelloPy
+# Copy the file to the right location on the zookernel container
+docker cp test.json zpgit-zookernel-1:/var/www/html/examples/HelloPy/sample.json
+````
+
 ## Using [OpenID Connect 1.0](https://openid.net/connect/) to authenticate
 
 First, you will update the docker-compose.yaml file at the `ZPGIT` directory and add the following content.
@@ -127,14 +155,24 @@ docker-compose down && docker-compose up -d
 
 The keycloack server may takes some time to start, after it properly started, you should be able to access the [keycloack's admin interface](http://localhost:8099/admin/). Please, log in with `admin`/`admin` credential as defined in the `docker-compose.yaml` file.
 
-Using the top left select list, displaying per default the "master" realm, you can create a realm. Use `ZOO_WS_SECURED_AREA` for the real name, click on create.
+Using the top left select list, displaying per default the "master" realm, you can create a realm. Use `ZOO_WS_SECURED_AREA` for the realm name, click on create.
 
-Once the realm creation is done, you will add a client with the following Client ID: `ZOO-Secured-Client`. On the second configuration page, activate the Implicit flow then, click on save.
+![Image: OpenID Connect realm](keycloack_new_real.png "OpenID Connect realm")
+
+Once the realm creation is done, you will add a client with the following Client ID: `ZOO-Secured-Client`. 
+
+![Image: OpenID Connect client 1](keycloack_new_client_1.png "OpenID Connect client 1")
+
+On the second configuration page, activate the Implicit flow then, click on save.
+
+![Image: OpenID Connect client 2](keycloack_new_client_2.png "OpenID Connect client 2")
 
 In the settings pannel, set the following values (press save to save the settings):
 
  * *Valid redirect URIs*: `http://localhost/swagger-ui/oapip/*`
  * *Web origins*: `http://localhost/swagger-ui/oapip/`
+
+![Image: OpenID Connect settings](keycloack_client_urls.png "OpenID Connect settings")
 
 To conclude the setup, you should decide if you want to use external identify providers (such as GitHub), or create a user within keycloack, or both.
 In case you decide to create a user from keycloack, don't forget to set a password using the dedicated tab from the User creation form.
