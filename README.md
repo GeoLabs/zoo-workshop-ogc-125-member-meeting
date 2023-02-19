@@ -249,6 +249,6 @@ Add support for JobID related to execution over secured end-points.
 
 Example: 
 
- - Paul execute asecured HelloPy asynchronously
+ - Paul execute a secured HelloPy asynchronously
  - Paul list the jobs only started by Paul
 
